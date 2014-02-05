@@ -21,6 +21,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.widget.ImageView;
+import android.widget.RemoteViews;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.IOException;
@@ -327,6 +328,34 @@ public class RequestCreator {
     target.onPrepareLoad(drawable);
 
     Action action = new TargetAction(picasso, target, finalData, skipMemoryCache, requestKey);
+    picasso.enqueueAndSubmit(action);
+  }
+
+  public void into(RemoteViews remoteViews, int[] appWidgetIds, int viewId) {
+    if (deferred) {
+      throw new IllegalStateException("Fit cannot be used with RemoteViews.");
+    }
+
+    Request finalData = picasso.transformRequest(data.build());
+    String key = createKey(finalData);
+
+    if (!skipMemoryCache) {
+      Bitmap bitmap = picasso.quickMemoryCacheCheck(key);
+      if (bitmap != null) {
+        PicassoDrawable.setBitmap(remoteViews, picasso.context, appWidgetIds, viewId, bitmap);
+        return;
+      }
+    }
+
+    if (placeholderResId != 0) {
+      PicassoDrawable.setPlaceholder(picasso.context, remoteViews, appWidgetIds, viewId,
+          placeholderResId);
+    }
+
+    Action action =
+        new RemoteViewAction(picasso, finalData, remoteViews, appWidgetIds, viewId, errorResId,
+            skipMemoryCache, key);
+
     picasso.enqueueAndSubmit(action);
   }
 
