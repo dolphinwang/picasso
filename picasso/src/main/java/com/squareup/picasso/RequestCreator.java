@@ -30,6 +30,8 @@ import static com.squareup.picasso.BitmapHunter.forRequest;
 import static com.squareup.picasso.Picasso.LoadedFrom.MEMORY;
 import static com.squareup.picasso.Utils.checkNotMain;
 import static com.squareup.picasso.Utils.createKey;
+import static com.squareup.picasso.Utils.setRemoteViewsBitmap;
+import static com.squareup.picasso.Utils.setRemoteViewsPlaceholder;
 
 /** Fluent API for building an image download request. */
 @SuppressWarnings("UnusedDeclaration") // Public API.
@@ -342,13 +344,13 @@ public class RequestCreator {
     if (!skipMemoryCache) {
       Bitmap bitmap = picasso.quickMemoryCacheCheck(key);
       if (bitmap != null) {
-        PicassoDrawable.setBitmap(remoteViews, picasso.context, appWidgetIds, viewId, bitmap);
+        setRemoteViewsBitmap(remoteViews, picasso.context, appWidgetIds, viewId, bitmap);
         return;
       }
     }
 
     if (placeholderResId != 0) {
-      PicassoDrawable.setPlaceholder(picasso.context, remoteViews, appWidgetIds, viewId,
+      setRemoteViewsPlaceholder(picasso.context, remoteViews, appWidgetIds, viewId,
           placeholderResId);
     }
 

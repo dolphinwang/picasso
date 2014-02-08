@@ -15,7 +15,6 @@
  */
 package com.squareup.picasso;
 
-import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -30,7 +29,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import android.widget.ImageView;
-import android.widget.RemoteViews;
 
 import static android.graphics.Color.WHITE;
 import static com.squareup.picasso.Picasso.LoadedFrom.MEMORY;
@@ -56,13 +54,6 @@ final class PicassoDrawable extends Drawable {
     target.setImageDrawable(drawable);
   }
 
-  static void setBitmap(RemoteViews remoteViews, Context context, int[] appWidgetIds, int viewId,
-      Bitmap bitmap) {
-    remoteViews.setImageViewBitmap(viewId, bitmap);
-    AppWidgetManager manager = AppWidgetManager.getInstance(context);
-    manager.updateAppWidget(appWidgetIds, remoteViews);
-  }
-
   /**
    * Create or update the drawable on the target {@link ImageView} to display the supplied
    * placeholder image.
@@ -76,13 +67,6 @@ final class PicassoDrawable extends Drawable {
     if (target.getDrawable() instanceof AnimationDrawable) {
       ((AnimationDrawable) target.getDrawable()).start();
     }
-  }
-
-  static void setPlaceholder(Context context, RemoteViews remoteViews, int[] appWidgetIds,
-      int viewId, int resId) {
-    remoteViews.setImageViewResource(viewId, resId);
-    AppWidgetManager manager = AppWidgetManager.getInstance(context);
-    manager.updateAppWidget(appWidgetIds, remoteViews);
   }
 
   private final boolean debugging;

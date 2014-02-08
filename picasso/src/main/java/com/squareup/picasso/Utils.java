@@ -17,6 +17,7 @@ package com.squareup.picasso;
 
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
+import android.appwidget.AppWidgetManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -26,6 +27,7 @@ import android.os.Looper;
 import android.os.Process;
 import android.os.StatFs;
 import android.provider.Settings;
+import android.widget.RemoteViews;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -206,6 +208,20 @@ final class Utils {
     }
     // Target ~15% of the available heap.
     return 1024 * 1024 * memoryClass / 7;
+  }
+
+  static void setRemoteViewsBitmap(RemoteViews remoteViews, Context context, int[] appWidgetIds,
+      int viewId, Bitmap bitmap) {
+    remoteViews.setImageViewBitmap(viewId, bitmap);
+    AppWidgetManager manager = AppWidgetManager.getInstance(context);
+    manager.updateAppWidget(appWidgetIds, remoteViews);
+  }
+
+  static void setRemoteViewsPlaceholder(Context context, RemoteViews remoteViews,
+      int[] appWidgetIds, int viewId, int resId) {
+    remoteViews.setImageViewResource(viewId, resId);
+    AppWidgetManager manager = AppWidgetManager.getInstance(context);
+    manager.updateAppWidget(appWidgetIds, remoteViews);
   }
 
   static boolean isAirplaneModeOn(Context context) {
